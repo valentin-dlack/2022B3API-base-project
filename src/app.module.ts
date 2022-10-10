@@ -1,7 +1,14 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 import {TypeOrmModule} from '@nestjs/typeorm';
+import { AuthService } from './auth/services/auth.service';
+import { LocalStrategy } from './auth/strategies/local.strategy';
+import { UsersController } from './users/controllers/users.controller';
+import { UsersService } from './users/services/users.service';
+import { User } from './users/user.entity';
+import { UsersModule } from './users/users.module';
 
 
 @Module({
@@ -16,13 +23,14 @@ import {TypeOrmModule} from '@nestjs/typeorm';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [],
+        entities: [User],
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
+    TypeOrmModule.forFeature([User]),
   ],
-  controllers: [],
-  providers: [],
+  controllers: [ UsersController ],
+  providers: [ UsersService ],
 })
 export class AppModule {}
