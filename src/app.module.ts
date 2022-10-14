@@ -28,9 +28,9 @@ import { UsersModule } from './users/users.module';
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([User]),
+    UsersModule,
   ],
-  controllers: [ UsersController ],
-  providers: [ UsersService ],
+  controllers: [ ],
+  providers: [ ],
 })
 export class AppModule {}

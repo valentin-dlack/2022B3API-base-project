@@ -15,8 +15,12 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  findOne(id: string): Promise<User> {
-    return this.usersRepository.findOneBy({ id });
+  findMail(email: string): Promise<User> {
+    return this.usersRepository.findOne({ where: { email: email } });
+  }
+
+  findUser(username: string): Promise<User> {
+    return this.usersRepository.findOne({ where: { username: username } });
   }
 
   //create user
