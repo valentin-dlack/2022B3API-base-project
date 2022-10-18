@@ -1,42 +1,46 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, ClassSerializerInterceptor, Controller, Get, HttpException, HttpStatus, Param, Post, Query, Req, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from "@nestjs/common";
 import { JwtAuthGuard } from "../../auth/guards/jwt-auth.guard";
 import { LocalAuthGuard } from "../../auth/guards/local-auth.guard";
 import { AuthService } from "../../auth/services/auth.service";
+import { CreateUserDto } from "../dto/user.dto";
 import { UsersService } from "../services/users.service";
 import { User } from "../user.entity";
 
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService, private authService: AuthService) {}
+
   @Post('auth/sign-up')
-  async create(@Body() body) {
+  @UsePipes(new ValidationPipe())
+  @UseInterceptors(ClassSerializerInterceptor)
+  async create(@Body() createUser: CreateUserDto): Promise<any> {
     //if email is not valid error 400
     let regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-    if (!regex.test(body.email)) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "email must be an email",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    //if no username error 400
-    if (!body.username) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: "username should not be empty'",
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    let user = new User();
-    user.email = body.email;
-    user.username = body.username;
-    user.password = body.password;
-    user.role = body.role ? body.role : "Employee";
-    return this.usersService.create(user);
+    // if (!regex.test(body.email)) {
+    //   throw new HttpException(
+    //     {
+    //       status: HttpStatus.BAD_REQUEST,
+    //       error: "email must be an email",
+    //     },
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
+    // //if no username error 400
+    // if (!body.username) {
+    //   throw new HttpException(
+    //     {
+    //       status: HttpStatus.BAD_REQUEST,
+    //       error: "username should not be empty'",
+    //     },
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
+    // let user = new User();
+    // user.email = body.email;
+    // user.username = body.username;
+    // user.password = body.password;
+    // user.role = body.role ? body.role : "Employee";
+    return this.usersService.create(createUser);
   }
 
   @Post('auth/login')
@@ -67,14 +71,42 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get("me")
-  getProlfile(@Req() req) {
+  getProfile(@Req() req) {
     // return user profile without password via jwt token
     let username = req.user.username;
     return this.usersService.findUser(username);
   }
   
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(): Promise<any[]> {
     return this.usersService.findAll();
+  }
+
+  @Get(":id")
+  async findOne(@Param("id") id: string): Promise<any> {
+    //test if id is a valid uuidv4
+    const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+    if (!regexExp.test(id)) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: "id must be a valid uuidv4",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    let user = await this.usersService.findId(id);
+    if (!user) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: "User not found",
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return user;
   }
 }
