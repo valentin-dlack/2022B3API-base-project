@@ -1,6 +1,7 @@
 //User entity
 import { Exclude } from 'class-transformer';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, BeforeInsert } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, BeforeInsert, OneToOne } from 'typeorm';
+import { ProjectUser } from '../project-users/project-users.entity';
 import { Project } from '../projects/project.entity';
 
 @Entity()
@@ -25,4 +26,7 @@ export class User {
   //Refference to Project Entity
   @OneToMany(type => Project, project => project.referringEmployee, { cascade: true })
   projects!: Project[];
+
+  @OneToMany(type => ProjectUser, projectUser => projectUser.user)
+  projectUser!: ProjectUser;
 }

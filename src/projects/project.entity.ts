@@ -1,5 +1,6 @@
 //Project Entity
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinTable, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinTable, JoinColumn, OneToOne } from 'typeorm';
+import { ProjectUser } from '../project-users/project-users.entity';
 import { User } from '../users/user.entity';
 
 @Entity()
@@ -16,5 +17,4 @@ export class Project {
   //Refference to User Entity
   @ManyToOne(type => User, user => user.projects)
   referringEmployee !: User;
-
 }
