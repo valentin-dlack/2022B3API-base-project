@@ -16,7 +16,7 @@ export class ProjectsService {
   }
 
   findMyProjects(user: User): Promise<Project[]> {
-    return this.projectsRepository.find({ where: { referringEmployee: user } });
+    return this.projectsRepository.find({ where: { referringEmployeeId: user.id } });
   }
 
   findById(id: string): Promise<Project> {

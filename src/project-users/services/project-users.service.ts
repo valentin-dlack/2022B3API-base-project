@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Between, Repository } from "typeorm";
+import { Project } from "../../projects/project.entity";
 import { User } from "../../users/user.entity";
 import { ProjectUser } from "../project-users.entity";
 
@@ -21,6 +22,14 @@ export class ProjectUsersService {
 
   findById(id: string): Promise<ProjectUser> {
     return this.projectUsersRepository.findOneBy({ id});
+  }
+
+  findMyProjects(user: User): Promise<ProjectUser[]> {
+    return this.projectUsersRepository.find({ where: { user } });
+  }
+
+  isInProject(user: User, project: Project): Promise<ProjectUser> {
+    return this.projectUsersRepository.findOneBy({ user, project });
   }
 
   checkBetweenDates(projectUser: ProjectUser): Promise<ProjectUser[]> {

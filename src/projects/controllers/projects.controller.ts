@@ -4,10 +4,11 @@ import { AuthService } from "../../auth/services/auth.service";
 import { Project } from "../project.entity";
 import { ProjectsService } from "../services/projects.service";
 import { UsersService } from "../../users/services/users.service";
+import { ProjectUsersService } from "../../project-users/services/project-users.service";
 
 @Controller("projects")
 export class ProjectsController {
-  constructor(private readonly projectsService: ProjectsService, private readonly usersService : UsersService ) {}
+  constructor(private readonly projectsService: ProjectsService, private readonly usersService : UsersService, private readonly projectUsersService: ProjectUsersService ) {}
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
@@ -49,8 +50,8 @@ export class ProjectsController {
     let project = await this.projectsService.findById(id);
     let me = await this.usersService.findUser(req.user.username);
 
-    //if me have employee role and project referringEmployeeId is not me error 401
-    if (me.role === "Employee" && project.referringEmployeeId !== me.id) {
+    //if me have employee role and is not in project return 403
+    if (me.role === "Employee" && !await this.projectUsersService.isInProject(me, project)) {
       throw new ForbiddenException("you are not authorized to view this project");
     }
 
@@ -65,6 +66,23 @@ export class ProjectsController {
     }
 
     return project;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getAllProjects(@Req() req) {
+    let me = await this.usersService.findUser(req.user.username);
+
+    if (me.role === "Employee") {
+      let projects = [];
+      for (let project of await this.projectUsersService.findMyProjects(me)) {
+        projects.push(await this.projectsService.findById(project.projectId));
+      }
+      return projects;
+    } else {
+      //return "Not employee"
+      return await this.projectsService.findAll()
+    }
   }
 
 }
