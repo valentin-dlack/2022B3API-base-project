@@ -1,6 +1,7 @@
 //User entity
 import { Exclude } from 'class-transformer';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, BeforeInsert, OneToOne } from 'typeorm';
+import { Event } from '../events/event.entity';
 import { ProjectUser } from '../project-users/project-users.entity';
 import { Project } from '../projects/project.entity';
 
@@ -29,4 +30,7 @@ export class User {
 
   @OneToMany(type => ProjectUser, projectUser => projectUser.user)
   projectUser!: ProjectUser;
+
+  @OneToMany(type => Event, event => event.user)
+  events!: Event[];
 }

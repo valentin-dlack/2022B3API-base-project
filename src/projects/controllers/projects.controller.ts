@@ -23,7 +23,6 @@ export class ProjectsController {
     }
 
 
-    //if user role is not admin
     if (user.role !== "Admin") {
       throw new HttpException(
         {
