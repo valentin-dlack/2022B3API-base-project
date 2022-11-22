@@ -83,5 +83,4 @@ export class ProjectsController {
       return await this.projectsService.findAll()
     }
   }
-
 }

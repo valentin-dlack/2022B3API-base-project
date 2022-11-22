@@ -1,18 +1,13 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
 import {TypeOrmModule} from '@nestjs/typeorm';
-import { AuthService } from './auth/services/auth.service';
-import { LocalStrategy } from './auth/strategies/local.strategy';
 import { Event } from './events/events.entity';
 import { EventsModule } from './events/events.module';
 import { ProjectUsersModule } from './project-users/project-user.module';
 import { ProjectUser } from './project-users/project-users.entity';
 import { Project } from './projects/project.entity';
 import { ProjectsModule } from './projects/projects.module';
-import { UsersController } from './users/controllers/users.controller';
-import { UsersService } from './users/services/users.service';
 import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
 

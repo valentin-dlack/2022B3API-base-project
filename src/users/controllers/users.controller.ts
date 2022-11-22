@@ -14,32 +14,7 @@ export class UsersController {
   @UsePipes(new ValidationPipe())
   @UseInterceptors(ClassSerializerInterceptor)
   async create(@Body() createUser: CreateUserDto): Promise<any> {
-    //if email is not valid error 400
     let regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-    // if (!regex.test(body.email)) {
-    //   throw new HttpException(
-    //     {
-    //       status: HttpStatus.BAD_REQUEST,
-    //       error: "email must be an email",
-    //     },
-    //     HttpStatus.BAD_REQUEST,
-    //   );
-    // }
-    // //if no username error 400
-    // if (!body.username) {
-    //   throw new HttpException(
-    //     {
-    //       status: HttpStatus.BAD_REQUEST,
-    //       error: "username should not be empty'",
-    //     },
-    //     HttpStatus.BAD_REQUEST,
-    //   );
-    // }
-    // let user = new User();
-    // user.email = body.email;
-    // user.username = body.username;
-    // user.password = body.password;
-    // user.role = body.role ? body.role : "Employee";
     return this.usersService.create(createUser);
   }
 
