@@ -12,7 +12,7 @@ export class Event {
 
   //event status [pending, accepted, declined], by default is pending
   @Column({ default: "pending" })
-  status!: "pending" | "accepted" | "declined";
+  status!: "Pending" | "Accepted" | "Declined";
 
   //event type [RemoteWork, PaidLeave]
   @Column()

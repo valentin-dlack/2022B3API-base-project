@@ -1,7 +1,7 @@
 //User entity
 import { Exclude } from 'class-transformer';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, BeforeInsert, OneToOne } from 'typeorm';
-import { Event } from '../events/event.entity';
+import { Event } from '../events/events.entity';
 import { ProjectUser } from '../project-users/project-users.entity';
 import { Project } from '../projects/project.entity';
 
