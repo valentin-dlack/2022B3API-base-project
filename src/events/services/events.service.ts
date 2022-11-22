@@ -24,6 +24,16 @@ export class EventsService {
     return this.eventsRepository.save(newEvent);
   }
 
+  confirmEvent(event: Event): Promise<Event> {
+    event.status = "Accepted";
+    return this.eventsRepository.save(event);
+  }
+
+  rejectEvent(event: Event): Promise<Event> {
+    event.status = "Declined";
+    return this.eventsRepository.save(event);
+  }
+
   isEventToday(event: Event, user: User): Promise<Event[]> {
     return this.eventsRepository.find({ where : { date: event.date, user }});
   }

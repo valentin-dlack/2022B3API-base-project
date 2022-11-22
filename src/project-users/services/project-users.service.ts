@@ -36,6 +36,10 @@ export class ProjectUsersService {
     return this.projectUsersRepository.find({ where : { startDate: Between(projectUser.startDate, projectUser.endDate), endDate: Between(projectUser.startDate, projectUser.endDate) }});
   }
 
+  findByDateAndUser(date: Date, user: User): Promise<ProjectUser[]> {
+    return this.projectUsersRepository.find({ where : [{ startDate: Between(date, date) }, { endDate: Between(date, date)}]});
+  }
+
   create(projectUser: ProjectUser): Promise<ProjectUser> {
     let project = this.projectUsersRepository.create(projectUser);
     return this.projectUsersRepository.save(project);
