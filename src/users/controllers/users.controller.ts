@@ -84,4 +84,43 @@ export class UsersController {
     }
     return user;
   }
+
+  @Get(':id/meal-vouchers/:month')
+  async findMealVouchers(@Param('id') id: string, @Param('month') month: string): Promise<any> {
+    //test if id is a valid uuidv4
+    const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+    if (!regexExp.test(id)) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: "id must be a valid uuidv4",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    //test if month is between 0 and 11
+    if (parseInt(month) < 0 || parseInt(month) > 11) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: "month must be a valid month number",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    let user = await this.usersService.findId(id);
+    if (!user) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: "User not found",
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return this.usersService.getMealVouchersValue(user, parseInt(month));
+  }
 }

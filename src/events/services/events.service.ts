@@ -38,6 +38,10 @@ export class EventsService {
     return this.eventsRepository.find({ where : { date: event.date, user }});
   }
 
+  isEventOnDate(user: User, date: Date): Promise<Event[]> {
+    return this.eventsRepository.find({ where : { date: date, user }});
+  }
+
   isRemoteWeek(event: Event, user: User): Promise<Event[]> {
     return this.eventsRepository.find({ where : { user, type: "RemoteWork" }});
   }
