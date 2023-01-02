@@ -45,9 +45,8 @@ export class UsersService {
     let days = 0;
     while (date.getMonth() === month) {
       if (date.getDay() !== 0 && date.getDay() !== 6) {
-        //get event of the user on the date
-        let event = await this.eventsService.isEventOnDate(date, user)
-        console.log(event);
+        //check if user don't have event on this day
+        let event = await this.eventsService.isEventOnDate(user, date);
         if (event.length === 0) {
           days++;
         }

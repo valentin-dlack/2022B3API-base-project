@@ -14,6 +14,10 @@ export class EventsService {
   findAll(): Promise<Event[]> {
     return this.eventsRepository.find();
   }
+
+  findMyEvents(user: User): Promise<Event[]> {
+    return this.eventsRepository.find({ where: { userId: user.id } });
+  }
   
   findById(id: string): Promise<Event> {
     return this.eventsRepository.findOneBy({ id });
@@ -35,14 +39,18 @@ export class EventsService {
   }
 
   isEventToday(event: Event, user: User): Promise<Event[]> {
-    return this.eventsRepository.find({ where : { date: event.date, user }});
+    return this.eventsRepository.find({ where : { date: event.date, userId: user.id }});
   }
 
-  isEventOnDate(user: User, date: Date): Promise<Event[]> {
-    return this.eventsRepository.find({ where : { date: date, user }});
+  async isEventOnDate(user: User, date: Date): Promise<Event[]> {
+    let events = await this.eventsRepository.find({ where : { 
+      userId: user.id,
+      date: Between(date, date)
+    }});
+    return events;
   }
 
   isRemoteWeek(event: Event, user: User): Promise<Event[]> {
-    return this.eventsRepository.find({ where : { user, type: "RemoteWork" }});
+    return this.eventsRepository.find({ where : { userId: user.id, type: "RemoteWork" }});
   }
 }

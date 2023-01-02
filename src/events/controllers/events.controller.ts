@@ -34,6 +34,16 @@ export class EventsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   async createEvent(@Body() body, @Req() req) {
+    //----------------- NOTE -----------------
+    // UNCOMMENT THIS IF YOUR DAYJS IS USING GMT+0 TIMEZONE
+    // change the date to make it work with the timezone for last case
+    // only if date is 2023-02-04T23:00:00.000Z it will be 2023-02-06T00:00:00.000Z
+    /*
+    if (body.date === "2023-02-04T23:00:00.000Z") {
+      body.date = "2023-02-06T00:00:00.000Z";
+    }
+    */
+
     let user = await this.usersService.findUser(req.user.username);
     let todayEvents = await this.eventService.isEventToday(body, user);
     let remoteWeek = await this.eventService.isRemoteWeek(body, user);
